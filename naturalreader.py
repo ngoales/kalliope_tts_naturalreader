@@ -30,7 +30,7 @@ class Naturalreader(TTSModule):
         self.src = "pw"
 
         self.r = kwargs.get('voice', None)
-        if self.voice is None:
+        if self.r is None:
             raise MissingTTSParameter("r parameter is required by the NaturalReader TTS")
 
         # speech rate
