@@ -79,17 +79,17 @@ class Naturalreader(TTSModule):
 
     def __init__(self, **kwargs):
         super(Naturalreader, self).__init__(**kwargs)
-        self.src = "pw"
-        self.voice = kwargs.get('voice', None)
 
+        self.voice = kwargs.get('voice', None)
         if self.voice is None:
             raise MissingTTSParameter("voice parameter is required by the NaturalReader TTS")
 
         if not VOICE_NAME_DATA.has_key( self.voice ):
             raise MissingTTSParameter("Unknow voice")
+
+        self.src = "pw"
         # speech rate
         self.speed = kwargs.get('speed', 180)
-
         self.t = None
 
     def say(self, words):
