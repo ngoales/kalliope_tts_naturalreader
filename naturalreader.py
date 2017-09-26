@@ -12,6 +12,59 @@ logger = logging.getLogger("kalliope")
 TTS_URL = "https://api.naturalreaders.com/v0/tts/"
 TTS_CONTENT_TYPE = "audio/mp3"
 TTS_TIMEOUT_SEC = 30
+API_KEY = "b98x9xlfs54ws4k0wc0o8g4gwc0w8ss"
+
+VOICE_NAME_DATA = {
+    "Sharon"    : {"id": 42, "lang": "en-US"},
+    "Ava"       : {"id": 1, "lang": "en-US"},
+    "Tracy"     : {"id": 37, "lang": "en-US"},
+    "Ryan"      : {"id": 33, "lang": "en-US"},
+    "Tom"       : {"id": 0, "lang": "en-US"},
+    "Samantha"  : {"id": 2, "lang": "en-US"},
+    "Mike"      : {"id": 1, "lang": "en-US"},
+    "Rod"       : {"id": 41, "lang": "en-US"},
+    "Rachel"    : {"id": 32, "lang": "en-UK"},
+    "Peter"     : {"id": 31, "lang": "en-UK"},
+    "Graham"    : {"id": 25, "lang": "en-UK"},
+    "Serena"    : {"id": 4, "lang": "en-UK"},
+    "Daniel"    : {"id": 3, "lang": "en-UK"},
+    "Charles"   : {"id": 2, "lang": "en-UK"},
+    "Audrey"    : {"id": 3, "lang": "en-UK"},
+    "Rosa"      : {"id": 20, "lang": "es-ES"},
+    "Alberto"   : {"id": 19, "lang": "es-ES"},
+    "Juan"      : {"id": 5, "lang": "es-MX"},
+    "Paulina"   : {"id": 6, "lang": "es-MX"},
+    "Monica"    : {"id": 7, "lang": "es-ES"},
+    "Jorge"     : {"id": 8, "lang": "es-ES"},
+    "Alain"     : {"id": 7, "lang": "fr-FR"},
+    "Juliette"  : {"id": 8, "lang": "fr-FR"},
+    "Nicolas"   : {"id": 9, "lang": "fr-CA"},
+    "Chantal"   : {"id": 10, "lang": "fr-CA"},
+    "Bruno"     : {"id": 22, "lang": "fr-FR"},
+    "Alice"     : {"id": 21, "lang": "fr-FR"},
+    "Louice"    : {"id": 43, "lang": "fr-CA"},
+    "Reiner"    : {"id": 5, "lang": "de-DE"},
+    "Klara"     : {"id": 6, "lang": "de-DE"},
+    "Klaus"     : {"id": 28, "lang": "de-DE"},
+    "Sarah"     : {"id": 35, "lang": "de-DE"},
+    "Yannick"   : {"id": 12, "lang": "de-DE"},
+    "Petra"     : {"id": 11, "lang": "de-DE"},
+    "Vittorio"  : {"id": 36, "lang": "it-IT"},
+    "Chiara"    : {"id": 23, "lang": "it-IT"},
+    "Frederica" : {"id": 14, "lang": "it-IT"},
+    "Luca"      : {"id": 13, "lang": "it-IT"},
+    "Celia"     : {"id": 44, "lang": "pt-PT"},
+    "Luciana"   : {"id": 16, "lang": "pt-BR"},
+    "Joana"     : {"id": 18, "lang": "pt-PT"},
+    "Catarina"  : {"id": 17, "lang": "pt-PT"},
+    "Emma"      : {"id": 45, "lang": "sv-SE"},
+    "Erik"      : {"id": 46, "lang": "sv-SE"},
+    "Oskar"     : {"id": 20, "lang": "sv-SE"},
+    "Alva"      : {"id": 19, "lang": "sv-SE"},
+    "Claire"    : {"id": 21, "lang": "nl-NL"},
+    "Xander"    : {"id": 22, "lang": "nl-NL"}
+}
+
 
 
 class TCPTimeOutError(Exception):
@@ -26,15 +79,16 @@ class Naturalreader(TTSModule):
 
     def __init__(self, **kwargs):
         super(Naturalreader, self).__init__(**kwargs)
-
         self.src = "pw"
+        self.voice = kwargs.get('voice', None)
 
-        self.r = kwargs.get('voice', None)
-        if self.r is None:
-            raise MissingTTSParameter("r parameter is required by the NaturalReader TTS")
+        if self.voice is None:
+            raise MissingTTSParameter("voice parameter is required by the NaturalReader TTS")
 
+        if not VOICE_NAME_DATA.has_key( self.voice ):
+            raise MissingTTSParameter("Unknow voice")
         # speech rate
-        self.s = kwargs.get('s', 180)
+        self.speed = kwargs.get('speed', 180)
 
         self.t = None
 
@@ -74,7 +128,7 @@ class Naturalreader(TTSModule):
         """
         return {
             "t": "%s" % self.t,
-            "r": "%s" % self.r,
-            "s": "%s" % self.s,
+            "r": "%s" % VOICE_NAME_DATA[self.voice]["id"],
+            "s": "%s" % self.speed,
             "src": "%s" % self.src
         }
